@@ -1,0 +1,47 @@
+{% extends 'IDE/base.html' %}
+
+{% block content %}
+<h2>New post</h2>
+<form method="POST" class="ide-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="output">
+        {% for i in text.lines%}
+        {% spaceless %}
+        {{i|safe}}</br>
+        {% endspaceless %}
+        {% endfor %}
+    </div>
+    <button type="submit" class="save btn btn-default">Save</button>
+</form>
+<script>
+
+    // $(document).ready(function () {
+    //     //code here...
+    //     var code = $(".editor")[0];
+    //     temp = document.getElementById("id_code");
+
+    //     // console.log(temp);
+    //     console.log(code);
+    //     var editor = CodeMirror.fromTextArea(code, {
+    //         mode: "application/xml",
+    //         htmlMode: true,
+    //         matchClosing: true,
+    //         lineNumbers: true,
+    //         spellcheck: true,
+    //         indentUnit: 4,
+    //         mode: 'clike',
+    //         keymap: "sublime",
+    //         autocorrect: true,
+    //         matchBrackets: true,
+    //         lineWrapping: true,
+    //         theme: 'monokai',
+    //     });
+    //     editor.on('change', function (cMirror) {
+    //         // get value right from instance
+    //         temp.value = editor.getValue();
+    //     });
+    //     editor.getTextArea();
+    // });
+</script>
+{% endblock %}
