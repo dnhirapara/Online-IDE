@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ACE in Action</title>
+    <style type="text/css" media="screen">
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        #editor {
+            position: relative;
+            /* grid: 500px; */
+            height: 500px;
+            width: 900px;
+            flex: 1;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="editor-blk">
+        <div id="editor">
+        </div>
+    </div>
+    <button id="submit" onclick="getValue()">Submit</button>
+    <script src="../../static/JS/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        // document.getElementById("editor").innerText = code;
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/twilight");
+        editor.session.setMode("ace/mode/c_cpp");
+        function getValue() {
+            console.log(editor.getValue());
+        }
+    </script>
+</body>
+
+</html>

@@ -7,12 +7,37 @@ import sys
 # Create your models here.
 
 
+class TestCases(models.Model):
+    id = models.AutoField(primary_key=True)
+    problem_id = models.ForeignKey(Problem, on_delete=models.CASCADE)
+    inp = models.TextField()
+    out = models.TextField()
+
+    def __str__(self):
+        return '%s %s' % (self.problem_id, self.id)
+
+
+class Problem(models.Model):
+    id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=20)
+    defination = models.TextField()
+
+    def __str__(self):
+        return '%s' % (self.title)
+
+
+class Submission(models.Model):
+    id = models.AutoField(primary_key=True)
+    problem_id = models.ForeignKey(Problem, on_delete=models.CASCADE)
+    code = models.TextField()
+
+
 class IDE(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200)
     code = models.TextField()
     inp = models.TextField(null=True)
-    output = models.TextField(null=True)
+    output = models.TextField(null=False, default="No ouput")
 
     def showOutput(self):
         path = self.makeFile(self.title, self.code)

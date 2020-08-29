@@ -10,7 +10,8 @@ router.register(r'codes', views.IDEViewSet)
 
 urlpatterns = [
     # path('', views.index, name='index'),
-    path('', views.codeit, name='codeit'),
+    path('codeit/', views.codeit, name='codeit'),
+    path('run/', views.codeRun, name='run'),
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

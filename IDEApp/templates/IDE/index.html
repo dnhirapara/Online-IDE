@@ -1,47 +1,27 @@
-{% extends 'IDE/base.html' %}
-
-{% block content %}
+{% extends 'IDE/base.html' %} {%load static %} {% block content %}
 <h2>New post</h2>
-<form method="POST" class="ide-form">
+<form method="POST" id="ide-form">
     {% csrf_token %}
-    {{ form.as_p }}
-    <div class="output">
-        {% for i in text.lines%}
-        {% spaceless %}
-        {{i|safe}}</br>
-        {% endspaceless %}
-        {% endfor %}
+    <!-- {{ form.as_p }} -->
+    <div>
+        Title : <input type="text" name="title" id="id_title" value="Untitled" required>
     </div>
-    <button type="submit" class="save btn btn-default">Save</button>
+    <div>
+        <p>Code :</p>
+        <div id="editor"></div>
+        <textarea name="code" id="id_code" hidden>code</textarea>
+        <div class="submit-btn">
+            <button type="submit" class="btn btn-info" name="run" value="run">Run</button>
+            <button type="submit" class="btn btn-success" name="submit" value="submit" onclick="setSubmit()">Submit</button>
+        </div>
+        <div class="chk_box">
+            Custom input: <input type="checkbox" name="chk_input" id="chk_input" value="1" onchange="display()">
+        </div>
+        <div id="input" class="input" style="display: none;">
+            <p>input :</p> <textarea name="input" id="id_input" cols="40" rows="5"></textarea>
+        </div>
+        <div class="output">
+        </div>
 </form>
-<script>
-
-    // $(document).ready(function () {
-    //     //code here...
-    //     var code = $(".editor")[0];
-    //     temp = document.getElementById("id_code");
-
-    //     // console.log(temp);
-    //     console.log(code);
-    //     var editor = CodeMirror.fromTextArea(code, {
-    //         mode: "application/xml",
-    //         htmlMode: true,
-    //         matchClosing: true,
-    //         lineNumbers: true,
-    //         spellcheck: true,
-    //         indentUnit: 4,
-    //         mode: 'clike',
-    //         keymap: "sublime",
-    //         autocorrect: true,
-    //         matchBrackets: true,
-    //         lineWrapping: true,
-    //         theme: 'monokai',
-    //     });
-    //     editor.on('change', function (cMirror) {
-    //         // get value right from instance
-    //         temp.value = editor.getValue();
-    //     });
-    //     editor.getTextArea();
-    // });
-</script>
+<script src="{% static 'JS/index.js' %}" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
