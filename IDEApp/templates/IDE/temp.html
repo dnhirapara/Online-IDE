@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <form>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputEmail4">Email</label>
+                <input type="email" class="form-control" id="inputEmail4">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputPassword4">Password</label>
+                <input type="password" class="form-control" id="inputPassword4">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputAddress">Address</label>
+            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+        </div>
+        <div class="form-group">
+            <label for="inputAddress2">Address 2</label>
+            <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputCity">City</label>
+                <input type="text" class="form-control" id="inputCity">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputState">State</label>
+                <select id="inputState" class="form-control">
+                    <option selected>Choose...</option>
+                    <option>...</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="inputZip">Zip</label>
+                <input type="text" class="form-control" id="inputZip">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="gridCheck">
+                <label class="form-check-label" for="gridCheck">
+                    Check me out
+                </label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Sign in</button>
+    </form>
+
+
+    <!-- actual form -->
+    <form method="POST" id="ide-form">
+        {% csrf_token %}
+        <!-- {{ form.as_p }} -->
+        <div>
+            Title : <input type="text" name="title" id="id_title" value="Untitled" required>
+        </div>
+        <div>
+            <p>Code :</p>
+            <div id="editor"></div>
+            <textarea name="code" id="id_code" cols="100" rows="20">code</textarea>
+            <div class=" submit-btn ">
+                <button type="submit " class="btn btn-info " name="run " value="run ">Run</button>
+                <button type="submit " class="btn btn-success " name="submit " value="submit "
+                    onclick="setSubmit() ">Submit</button>
+            </div>
+            <div class="chk_box">
+                Custom input: <input type="checkbox " name="chk_input " id="chk_input " value="1 "
+                    onchange="display() ">
+            </div>
+            <div id="input " class="input " style="display: none; ">
+                <p>input :</p> <textarea name="input " id="id_input " cols="40 " rows="5 "></textarea>
+            </div>
+    </form>
+    <!-- actual form end -->
+</body>
+<script>
+
+    /* output editor */
+    var output_editor = ace.edit("output");
+    output_editor.resize();
+    // output_editor.setOption("maxLines", 100);
+    output_editor.setAutoScrollEditorIntoView(true);
+    output_editor.renderer.setScrollMargin(10, 10, 10, 10);
+    // output_editor.setOption("maxLines", 15);
+
+    output_editor.setOptions({
+        wrap: true,
+        // readOnly: true,
+        autoScrollEditorIntoView: true,
+        copyWithEmptySelection: true,
+        showPrintMargin: false, // hides the vertical limiting strip
+        // maxLines: Infinity,
+    });
+    output_editor.setTheme("ace/theme/xcode");
+    output_editor.session.setMode("ace/mode/c_cpp");
+    output_editor.setValue("hello");
+    /* output editor ends */
+    function changeOutput(str) {
+        output_editor = ace.edit("output");
+        output_editor.resize();
+        // output_editor.setOption("maxLines", 100);
+        output_editor.setAutoScrollEditorIntoView(true);
+        output_editor.renderer.setScrollMargin(10, 10, 10, 10);
+        // output_editor.setOption("maxLines", 15);
+
+        output_editor.setOptions({
+            wrap: true,
+            readOnly: true,
+            autoScrollEditorIntoView: true,
+            copyWithEmptySelection: true,
+            showPrintMargin: false, // hides the vertical limiting strip
+            // maxLines: Infinity,
+        });
+        output_editor.setTheme("ace/theme/xcode");
+        output_editor.session.setMode("ace/mode/c_cpp");
+        console.log("output" + str);
+        output_editor.setValue(str);
+        // send($('#ide-form'));
+        return output_editor;
+    }
+    // function send(e) {
+    //     document.getElementsByClassName('output')[0].innerHTML = '';
+    //     console.log($('#chk_input').val());
+    //     e.preventDefault();
+    //     console.log('{% url ' + btnVal + ' %}');
+    //     console.log(btnVal);
+    //     $.ajax({
+    //         type: 'POST',
+    //         // url: '{% url "run" %}',
+    //         url: '/IDEApp/' + btnVal + '/',
+    //         data: {
+    //             title: "hello", //$('#id_title').val(),
+    //             code: editor.getValue(),
+    //             chk_input: $('#chk_input').val(),
+    //             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+    //             inp: $('#id_input').val(),
+    //             action: 'post'
+    //         },
+    //         success: function (json) {
+    //             displayOutput(json.out);
+    //             document.getElementsByClassName('ace_text-input')[0].setValue = json.out;
+    //             // $(".output").prepend('<div class="col-md-6">' +
+    //             //     '<div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">' +
+    //             //     '<div class="col p-4 d-flex flex-column position-static">' +
+    //             //     '<p class="mb-auto">' + json.out + '</p>' +
+    //             //     '</div>' +
+    //             //     '</div>' +
+    //             //     '</div>'
+    //             // );
+    //         },
+    //         error: function (xhr, errmsg, err) {
+    //             console.log("error");
+    //             console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+    //         }
+    //     });
+    // }
+    function displayOutput(str) {
+        console.log(str + " HELLO OUTPUT");
+        output_editor.setValue(str);
+    }
+
+</script>
+
+</html>

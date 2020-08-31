@@ -1,16 +1,17 @@
-* {
+/* * {
     margin: 0;
     padding: 0;
-    /* background-color: aqua; */
-}
+    font: 22px;
+} */
 
 .CodeMirror {
     border: 2px solid black;
 }
 
-#id_code {
+
+/* #id_code {
     position: relative;
-    /* grid: 500px; */
+    grid: 500px;
     height: 500px;
     width: 900px;
     flex: 1;
@@ -19,32 +20,38 @@
     left: 0;
     right: 0;
     border: 1px solid black;
-}
+} */
 
 #editor {
     position: relative;
     /* grid: 500px; */
-    height: 500px;
-    width: 900px;
+    width: 100%;
     flex: 1;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    /* top: 50px; */
+    font-size: 24px;
     border: 1px solid black;
+    border-radius: 5px;
+}
+#output {
+    position: relative;
+    /* grid: 500px; */
+    width: 100%;
+    flex: 1;
+    left: 0;
+    top: 0;
+    margin: 0;
+    border: 1px solid black;
+    border-radius: 5px;
 }
 
 .submit-btn {
+    position: relative;
     float: right;
     margin: 20px;
 }
 
-.chk_box {
+/* .chk_box {
+    z-index: 1;
+    position: relative;
     margin: 20px;
-}
-
-.output {
-    box-sizing: border-box;
-    width: 400px;
-    height: 200px;
-}
+} */

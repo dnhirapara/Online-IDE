@@ -22,7 +22,9 @@ int main()
     // cin >> tc;
     while (tc--)
     {
-        cout<<"hello"<<endl;
+        int a,b;
+        cin>>a>>b;
+        cout<<a+a+b<<endl;
     }
     return 0;
 }

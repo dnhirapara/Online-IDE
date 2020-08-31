@@ -1,27 +1,58 @@
 {% extends 'IDE/base.html' %} {%load static %} {% block content %}
-<h2>New post</h2>
 <form method="POST" id="ide-form">
     {% csrf_token %}
-    <!-- {{ form.as_p }} -->
-    <div>
-        Title : <input type="text" name="title" id="id_title" value="Untitled" required>
+    <div class="card">
+        <div class="card-header">
+            <div class="row m-auto">
+                <div class="col align-middle  float-left">
+                    <div class="m-auto h1">
+                        SUM
+                    </div>
+                </div>
+                <select class="custom-select col-2 float-right mt-auto mb-auto mr-2" id="editor_theme">
+                    <option value="twilight" selected>twilight</option>
+                    <option value="terminal">terminal</option>
+                    <option value="monokai">monokai</option>
+                    <option value="dracula">dracula</option>
+                </select>
+                <select class="custom-select col-2 float-right mt-auto mb-auto mr-2" id="code_lang"
+                    onchange="selectLang()">
+                    <option value="c_cpp" selected>C</option>
+                    <option value="c_cpp">C++</option>
+                    <option value="python">Python</option>
+                </select>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="card-group">
+                <div id="editor" class="m-0 p-0" style="width: 100%; height: 450px;"></div>
+            </div>
+            <textarea name="code" id="id_code" cols="100" rows="20" hidden></textarea>
+        </div>
+        <div class="card-footer">
+            <div class="form-check custom-control float-left my-auto pl-0" style="background-color:aqua ;">
+                <label class="form-check-label align-middle" style="background-color: cadetblue;">
+                    <div class="d-inline my-auto py-auto">Custom Input</div>
+                    <input class="form-check-input ml-1 align-middle" style="background-color: cadetblue;"
+                        type="checkbox" value="1" onchange="display()">
+                    <div id="input " class="input " style="display: none; ">
+                        <p>input :</p> <textarea name="input " id="id_input " cols="40 " rows="5 "></textarea>
+                    </div>
+                </label>
+            </div>
+            <button type="submit" class="btn btn-success float-right p-2 ml-2 mr-2rounded-right" value="submit">
+                Submit
+            </button>
+            <button class="btn btn-info float-right p-2 ml-2 mr-2 rounded-right" value="run">Run</button>
+        </div>
     </div>
-    <div>
-        <p>Code :</p>
-        <div id="editor"></div>
-        <textarea name="code" id="id_code" hidden>code</textarea>
-        <div class="submit-btn">
-            <button type="submit" class="btn btn-info" name="run" value="run">Run</button>
-            <button type="submit" class="btn btn-success" name="submit" value="submit" onclick="setSubmit()">Submit</button>
-        </div>
-        <div class="chk_box">
-            Custom input: <input type="checkbox" name="chk_input" id="chk_input" value="1" onchange="display()">
-        </div>
-        <div id="input" class="input" style="display: none;">
-            <p>input :</p> <textarea name="input" id="id_input" cols="40" rows="5"></textarea>
-        </div>
-        <div class="output">
-        </div>
 </form>
-<script src="{% static 'JS/index.js' %}" type="text/javascript" charset="utf-8"></script>
+<div class="card my-3" style="margin: 0;padding: 0;">
+    <div class="card-header">Output</div>
+    <div class="card-body">
+        <textarea id="output" readonly>  </textarea>
+    </div>
+</div>
+<script src="{% static 'JS/index.js' %} " type="text/javascript " charset="utf-8 "></script>
+
 {% endblock %}

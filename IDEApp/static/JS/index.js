@@ -1,40 +1,75 @@
 btnVal = "run";
+
+
 var editor = ace.edit("editor");
+editor.resize();
+// editor.setOption("maxLines", 100);
+editor.setAutoScrollEditorIntoView(true);
+editor.renderer.setScrollMargin(10, 10, 10, 10);
+// editor.setOption("maxLines", 15);
+
+editor.setOptions({
+    wrap: true,
+    autoScrollEditorIntoView: true,
+    copyWithEmptySelection: true,
+    showInvisibles: true,
+    enableLiveAutocompletion: true,
+    enableSnippets: true,
+    displayIndentGuides: true,
+    showPrintMargin: false, // hides the vertical limiting strip
+    // maxLines: Infinity,
+});
 editor.setTheme("ace/theme/twilight");
 editor.session.setMode("ace/mode/c_cpp");
+// editor.session.setOption("wrap", true);
+document.getElementById("editor_theme").addEventListener("change", function () {
+    editor.setTheme("ace/theme/" + document.getElementById("editor_theme").value);
+    console.log("ace/theme/" + document.getElementById("editor_theme").value);
+});
+function selectLang() {
+    editor.session.setMode("ace/mode/" + document.getElementById("code_lang").value);
+    console.log("ace/mode/" + document.getElementById("code_lang").value);
+}
 
 function setSubmit() {
     btnVal = "submit";
     console.log("submit value setted");
 }
-$(document).on('submit', '#ide-form', function(e) {
-    document.getElementsByClassName('output')[0].innerHTML = '';
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+$(document).on('submit', '#ide-form', function (e) {
+    document.getElementById('output').innerHTML = '';
     console.log($('#chk_input').val());
     e.preventDefault();
-    console.log('{% url "run" %}');
+    console.log('{% url ' + btnVal + ' %}');
+    console.log(btnVal);
     $.ajax({
         type: 'POST',
         // url: '{% url "run" %}',
-        url: '/IDEApp/run/',
+        url: '/IDEApp/' + btnVal + '/',
         data: {
-            title: $('#id_title').val(),
+            title: "hello", //$('#id_title').val(),
             code: editor.getValue(),
             chk_input: $('#chk_input').val(),
             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
             inp: $('#id_input').val(),
             action: 'post'
         },
-        success: function(json) {
-            $(".output").prepend('<div class="col-md-6">' +
-                '<div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">' +
-                '<div class="col p-4 d-flex flex-column position-static">' +
-                '<p class="mb-auto">' + json.out + '</p>' +
-                '</div>' +
-                '</div>' +
-                '</div>'
-            );
+        success: function (json) {
+            // $("#output").prepend('<div class="col-md-6">' +
+            //     '<div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">' +
+            //     '<div class="col p-4 d-flex flex-column position-static">' +
+            //     '<p class="mb-auto">' + json.out + '</p>' +
+            //     '</div>' +
+            //     '</div>' +
+            //     '</div>'
+            // );
+            $('#output').innerText = json.out;
+            console.log(json.out);
         },
-        error: function(xhr, errmsg, err) {
+        error: function (xhr, errmsg, err) {
             console.log("error");
             console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
         }
@@ -53,7 +88,7 @@ function display() {
 
 // document.getElementById("editor").innerText = code;
 editor.on('change',
-    function() {
+    function () {
         console.log(editor.getValue());
         document.getElementById("id_code").innerText = editor.getValue();
     });

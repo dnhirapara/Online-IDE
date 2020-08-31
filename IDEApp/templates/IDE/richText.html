@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.ckeditor.com/ckeditor5/21.0.0/classic/ckeditor.js"></script>
+</head>
+
+<body>
+    <form action="#" method="GET">
+        <textarea id="editor" name="content">
+
+        </textarea>
+        <input type="submit" id="submit" name="submit"> </form>
+</body>
+<script>
+    let editor;
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .then(newEditor => {
+            editor = newEditor;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    let button = document.getElementById("submit").addEventListener("click", function() {
+        console.log(editor.getData());
+    });
+</script>
+
+</html>

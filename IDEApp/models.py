@@ -7,16 +7,6 @@ import sys
 # Create your models here.
 
 
-class TestCases(models.Model):
-    id = models.AutoField(primary_key=True)
-    problem_id = models.ForeignKey(Problem, on_delete=models.CASCADE)
-    inp = models.TextField()
-    out = models.TextField()
-
-    def __str__(self):
-        return '%s %s' % (self.problem_id, self.id)
-
-
 class Problem(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=20)
@@ -26,10 +16,21 @@ class Problem(models.Model):
         return '%s' % (self.title)
 
 
+class TestCases(models.Model):
+    problem_id = models.ForeignKey(Problem, on_delete=models.CASCADE)
+    id = models.AutoField(primary_key=True)
+    inp = models.TextField()
+    out = models.TextField()
+
+    def __str__(self):
+        return '%s %s' % (self.problem_id, self.id)
+
+
 class Submission(models.Model):
     id = models.AutoField(primary_key=True)
     problem_id = models.ForeignKey(Problem, on_delete=models.CASCADE)
     code = models.TextField()
+    result = models.TextField(null=True)
 
 
 class IDE(models.Model):

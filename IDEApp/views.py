@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 
 from .IDEForm import Editor
-from .models import IDE
+from .models import IDE, Submission, Problem, TestCases
 from .serializers import IDESerializer
 from rest_framework import viewsets
 
@@ -35,16 +35,40 @@ def codeSubmit(request):
 
         path = makeFile(request.POST['title'].rstrip(), request.POST['code'])
         inputs = ""
-        print(request.POST.get('chk_input'))
-        if request.POST.get('chk_input') == '1':
-            inputs = (str(request.POST['inp'])).strip()
-            print(inputs)
-        text = runCpp(path, inputs)
-        text = text.strip()
-        response_data['out'] = text
+        problems = Problem.objects.all()[0]
         response_data['msg'] = "success"
         print(response_data)
+        print(TestCases.objects.filter(problem_id=problems))
+        k = 0
+        answer = ""
+        flag = False
+        debug_msg = ""
+        # for i in problems.testcases_set.all():
+        for i in TestCases.objects.filter(problem_id=problems):
+            text = runCpp(path, i.inp)
+            k += 1
+            answer += "#input :" + str(k)+"\n"+i.inp
+            answer += "\nOutput:\n" + text
+            answer += "\nAnswer:\n" + i.out + "\n\n"
+            if (str(i.out).strip() != text.strip()):
+                flag = True
+                debug_msg = "Wrong Answer\n"
+                debug_msg += "#input :" + str(k)+"\n"+i.inp
+                debug_msg += "\nOutput:\n" + text
+                debug_msg += "\nAnswer:\n" + i.out + "\n\n"
+                debug_msg.replace("\n", "<br/>")
+            break
+            print(i.inp)
+            print(i.out)
+            print(text)
         # return JsonResponse(response_data)
+        if (flag):
+            response_data['out'] = debug_msg
+        else:
+            response_data['out'] = "Accepted"
+        form = Submission(problem_id=problems,
+                          code=request.POST['code'], result=answer)
+        form.save()
         return HttpResponse(
             json.dumps(response_data),
             content_type="application/json"
@@ -127,6 +151,12 @@ def makeFile(name, code):
         code = code.replace("\r", "")
         f.write(code)
     return name
+
+
+def compileCpp(path):
+    runs = subprocess.run(
+        ['g++', '-D', 'AUTO', '-O2', '-std=c++14', '-D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC', '-Wall', path, '-o', 'a.exe'], text=True, capture_output=True)
+    return not runs.returncode
 
 
 def runCpp(path, inp):

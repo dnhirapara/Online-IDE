@@ -12,6 +12,7 @@ urlpatterns = [
     # path('', views.index, name='index'),
     path('codeit/', views.codeit, name='codeit'),
     path('run/', views.codeRun, name='run'),
+    path('submit/', views.codeSubmit, name='submit'),
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
