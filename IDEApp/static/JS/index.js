@@ -1,32 +1,78 @@
+/* variable declaration */
 btnVal = "run";
-
-
 var editor = ace.edit("editor");
-editor.resize();
-// editor.setOption("maxLines", 100);
-editor.setAutoScrollEditorIntoView(true);
-editor.renderer.setScrollMargin(10, 10, 10, 10);
-// editor.setOption("maxLines", 15);
+var _codeLang = "c";
+var ini_snip_c = "#include<stdio.h>" +
+    "int main(){" +
+    "return 0;" +
+    "}";
+/* variable declaration end */
 
-editor.setOptions({
-    wrap: true,
-    autoScrollEditorIntoView: true,
-    copyWithEmptySelection: true,
-    showInvisibles: true,
-    enableLiveAutocompletion: true,
-    displayIndentGuides: true,
-    showPrintMargin: false, // hides the vertical limiting strip
-    // maxLines: Infinity,
+$(document).ready(function () {
+    $('#output-card').hide();
+    initilizeEditor();
+    sleep(2000);
 });
-editor.setTheme("ace/theme/twilight");
-editor.session.setMode("ace/mode/c_cpp");
-// editor.session.setOption("wrap", true);
+
+function initilizeEditor() {
+    editor = ace.edit("editor");
+    editor.resize("800px");
+    editor.setAutoScrollEditorIntoView(true);
+    editor.renderer.setScrollMargin(10, 10, 10, 10);
+    editor.setOptions({
+        wrap: true,
+        autoScrollEditorIntoView: true,
+        copyWithEmptySelection: true,
+        showInvisibles: true,
+        enableLiveAutocompletion: true,
+        displayIndentGuides: true,
+        showPrintMargin: false,
+    });
+    editor.setTheme("ace/theme/twilight");
+    editor.session.setMode("ace/mode/c_cpp");
+    editor.setValue("//enter c code\n");
+    document.getElementById("editor").style.height = "500px";
+    // editor.clearSelection();
+}
+/* settings */
+
+document.getElementById("font-range").addEventListener("change", function () {
+    let size = this.value;
+    document.getElementById("span-font-range").innerHTML = size;
+    console.log(size);
+    changeFontSize(size);
+});
+
+document.getElementById("text-wrap").addEventListener("change", function () {
+    changeTextWrap(this.checked);
+});
+
 document.getElementById("editor_theme").addEventListener("change", function () {
     editor.setTheme("ace/theme/" + document.getElementById("editor_theme").value);
     console.log("ace/theme/" + document.getElementById("editor_theme").value);
 });
+
+
+function changeFontSize(size) {
+    editor.setFontSize(size);
+}
+
+function changeTextWrap(flag) {
+    editor.session.setUseWrapMode(flag.value);
+}
+
 function selectLang() {
-    editor.session.setMode("ace/mode/" + document.getElementById("code_lang").value);
+    _codeLang = document.getElementById("code_lang").value;
+    if (_codeLang === "c") {
+        editor.session.setMode("ace/mode/c_cpp");
+        editor.setValue("//enter c code");
+    } else if (_codeLang === "cpp") {
+        editor.session.setMode("ace/mode/c_cpp");
+        editor.setValue("//enter c++ code");
+    } else if (_codeLang === "py") {
+        editor.session.setMode("ace/mode/python");
+        editor.setValue("#enter python code");
+    }
     console.log("ace/mode/" + document.getElementById("code_lang").value);
 }
 
@@ -34,6 +80,7 @@ function setSubmit(str) {
     btnVal = str;
     console.log("submit value setted");
 }
+/* settings end*/
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -54,7 +101,7 @@ function setBtnActive() {
 }
 
 $(document).on('submit', '#ide-form', function (e) {
-    document.getElementById('output').innerHTML = '';
+    document.getElementById('textarea-output').innerHTML = '';
     console.log($('#chk_input').val());
     e.preventDefault();
     console.log(document.querySelector("button[value=" + btnVal + "]"));
@@ -71,43 +118,31 @@ $(document).on('submit', '#ide-form', function (e) {
     console.log(btnVal);
     $.ajax({
         type: 'POST',
-        // url: '{% url "run" %}',
         url: '/IDEApp/' + btnVal + '/',
         data: {
-            title: "hello", //$('#id_title').val(),
+            title: "hello",
             code: editor.getValue(),
             chk_input: $('#chk_input').val(),
+            codeLang: _codeLang,
             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
             inp: $('#id_input').val(),
             action: 'post'
         },
         success: function (json) {
-            // $("#output").prepend('<div class="col-md-6">' +
-            //     '<div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">' +
-            //     '<div class="col p-4 d-flex flex-column position-static">' +
-            //     '<p class="mb-auto">' + json.out + '</p>' +
-            //     '</div>' +
-            //     '</div>' +
-            //     '</div>'
-            // );
-            $('#output').val(json.out);
+            $('#output-card').show();
+            $('#textarea-output').val(json.out);
+            $('#textarea-output').height($('#textarea-output')[0].scrollHeight);
+            $('#textarea-output').css('#output');
             btns.removeChild(spinner);
             btns.disabled = false;
             setBtnActive();
             document.getElementById("id_btns").disabled = true;
-            // $('#output').innerText = "// $('#output').prepend('<div class='col-md-6'>" +
-            //     "//     '<div class=/row no-gutters border rounded overflow-hidden flex-md-row /mb-4 shadow-sm h-md-250 position-relative/>' +" +
-            //     "//     '<div class='col p-4 d-flex flex-column position-static'>' +" +
-            //     "//     '<p class='mb-auto'>' + json.out + '<//p>' +" +
-            //     "//     '</div>' +" +
-            //     "//     '</div>' +" +
-            //     "//     '</div>'+" +
-            //     "// )";
             console.log(json.out);
+            $('body, html').animate({ scrollTop: $("#textarea-output").offset().top }, 1000);/* To scroll display */
         },
         error: function (xhr, errmsg, err) {
             console.log("error");
-            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            console.log(xhr.status + ": " + xhr.responseText);
         }
     });
 });
@@ -122,41 +157,31 @@ function display() {
     }
 }
 
-// document.getElementById("editor").innerText = code;
-editor.on('change',
-    function () {
-        console.log(editor.getValue());
-        document.getElementById("id_code").innerText = editor.getValue();
-    });
+// editor.on('change',
+//     function () {
+//         console.log(editor.getValue());
+//         document.getElementById("id_code").innerText = editor.getValue();
+//     });
 
-function getValue() {
-    console.log(editor.getValue());
+// function getValue() {
+//     console.log(editor.getValue());
+// }
 
+
+/* clock */
+function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('txt').innerHTML =
+        h + ":" + m + ":" + s;
+    var t = setTimeout(startTime, 500);
 }
-// $(document).ready(function() {
-//     //code here...
-//     var code = $("#id_code")[0];
-//     temp = document.getElementById("id_code");
-
-//     // console.log(temp);
-//     console.log(code);
-//     var editor = CodeMirror.fromTextArea(code, {
-//         mode: "application/xml",
-//         htmlMode: true,
-//         matchClosing: true,
-//         lineNumbers: true,
-//         spellcheck: true,
-//         indentUnit: 4,
-//         mode: 'clike',
-//         keymap: "sublime",
-//         autocorrect: true,
-//         matchBrackets: true,
-//         lineWrapping: true,
-//         theme: 'monokai',
-//     });
-//     editor.on('change', function(cMirror) {
-//         // get value right from instance
-//         temp.value = editor.getValue();
-//     });
-//     editor.getTextArea();
-// });
+function checkTime(i) {
+    if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
+    return i;
+}
+/* clock end */

@@ -17,10 +17,32 @@
                 </select>
                 <select class="custom-select col-2 float-right mt-auto mb-auto mr-2" id="code_lang"
                     onchange="selectLang()">
-                    <option value="c_cpp" selected>C</option>
-                    <option value="c_cpp">C++</option>
-                    <option value="python">Python</option>
+                    <option value="c" selected>C</option>
+                    <option value="cpp">C++</option>
+                    <option value="py">Python</option>
                 </select>
+                <div class="float-right mt-auto mb-auto ">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <div class="dropdown-item">
+                                <label class="form-check-label">
+                                    <div class="d-inline my-auto py-auto">Wrap</div>
+                                    <input type="checkbox" class="form-check-inline" id="text-wrap" checked>
+                                </label>
+                            </div>
+                            <div class="dropdown-item">
+                                <div class="d-inline my-auto py-auto">Font Size : <span id="span-font-range">16</span>
+                                </div>
+                                <input type="range" min="16" max="46" value="18" id="font-range"
+                                    class="form-control-range">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="card-body p-0">
@@ -36,7 +58,7 @@
                     <input class="form-check-input ml-1 my-2 align-middle" type="checkbox" value="1" id="chk_input"
                         onchange="display()">
                     <div id="input" class="card input" style="display: none; ">
-                        <p class="card-header bg-dark text-info">input :</p>
+                        <p class="card-header bg-dark text-info">Input :</p>
                         <div class="card-body p-0">
                             <textarea name="input" id="id_input" cols="40 " rows="5 "></textarea>
                         </div>
@@ -54,10 +76,10 @@
         </div>
     </div>
 </form>
-<div class="card my-3" style="margin: 0;padding: 0;">
+<div class="card my-3" id="output-card" style="margin: 0;padding: 0;">
     <div class="card-header">Output</div>
     <div class="card-body">
-        <textarea id="output" readonly style="height: auto;">  </textarea>
+        <textarea id="textarea-output" class="shadow-textarea" style="height: auto;" readonly>  </textarea>
     </div>
 </div>
 <script src="{% static 'JS/index.js' %} " type="text/javascript " charset="utf-8 "></script>

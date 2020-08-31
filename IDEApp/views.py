@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.conf import settings
 
 from .IDEForm import Editor
 from .models import IDE, Submission, Problem, TestCases
@@ -117,6 +118,8 @@ def codeRun(request):
 
 
 def codeit(request):
+    print(settings.BASE_DIR)
+    print(settings.MEDIA_ROOT)
     text = "123\n456"
     form = {"hello": "to"}
     return render(request, 'IDE/index.html')
@@ -146,7 +149,7 @@ def codeit(request):
 
 def makeFile(name, code):
     name = name.replace(" ", "_")
-    name = "G:\\SEM - 4\\Python\\Django_framework\\IDE\\IDE\\IDEApp\\Progs\\"+name+".cpp"
+    name = settings.SUBMISSION_ROOT+name+".cpp"
     with open(name, 'w') as f:
         code = code.replace("\r", "")
         f.write(code)
@@ -155,13 +158,13 @@ def makeFile(name, code):
 
 def compileCpp(path):
     runs = subprocess.run(
-        ['g++', '-D', 'AUTO', '-O2', '-std=c++14', '-D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC', '-Wall', path, '-o', 'a.exe'], text=True, capture_output=True)
+        ['g++', '-D', 'AUTO', '-O2', '-std=c++14', '-D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC', '-Wall', path, '-o', 'a.o'], text=True, capture_output=True)
     return not runs.returncode
 
 
 def runCpp(path, inp):
     runs = subprocess.run(
-        ['g++', '-D', 'AUTO', '-O2', '-std=c++14', '-D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC', '-Wall', path, '-o', 'a.exe'], text=True, capture_output=True)
+        ['g++', '-D', 'AUTO', '-O2', '-std=c++14', '-D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC', '-Wall', path, '-o', os.path.join(settings.SUBMISSION_ROOT, '/a.o')], text=True, capture_output=True)
     if runs.returncode != 0:
         return "error!!!"
     else:
@@ -171,7 +174,7 @@ def runCpp(path, inp):
         os.close(temp)
         start_time = time.process_time()
         s = subprocess.check_output(
-            ['a.exe'], stdin=data, shell=True)
+            [os.path.join(settings.SUBMISSION_ROOT, '/a.o')], stdin=data, shell=True)
         output = s.decode("utf-8")
         output = output.replace("\r", "")
         return output
