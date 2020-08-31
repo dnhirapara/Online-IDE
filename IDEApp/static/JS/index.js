@@ -14,7 +14,6 @@ editor.setOptions({
     copyWithEmptySelection: true,
     showInvisibles: true,
     enableLiveAutocompletion: true,
-    enableSnippets: true,
     displayIndentGuides: true,
     showPrintMargin: false, // hides the vertical limiting strip
     // maxLines: Infinity,
@@ -31,18 +30,43 @@ function selectLang() {
     console.log("ace/mode/" + document.getElementById("code_lang").value);
 }
 
-function setSubmit() {
-    btnVal = "submit";
+function setSubmit(str) {
+    btnVal = str;
     console.log("submit value setted");
 }
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+function setBtnInactive() {
+    let data = document.getElementsByTagName("button");
+    for (let i of data) {
+        i.disabled = true;
+    }
+}
+
+function setBtnActive() {
+    let data = document.getElementsByTagName("button");
+    for (let i of data) {
+        i.disabled = false;
+    }
+}
+
 $(document).on('submit', '#ide-form', function (e) {
     document.getElementById('output').innerHTML = '';
     console.log($('#chk_input').val());
     e.preventDefault();
+    console.log(document.querySelector("button[value=" + btnVal + "]"));
+    let btns = document.querySelector("button[value=" + btnVal + "]");
+    btns.disabled = true;
+    setBtnInactive();
+    let spinner = document.createElement('div');
+    spinner.setAttribute("class", "spinner-border text-dark m-1 my-1 mx-1");
+    spinner.width = "1rem";
+    spinner.height = "1rem";
+    spinner.setAttribute("role", "status");
+    btns.appendChild(spinner);
     console.log('{% url ' + btnVal + ' %}');
     console.log(btnVal);
     $.ajax({
@@ -66,7 +90,19 @@ $(document).on('submit', '#ide-form', function (e) {
             //     '</div>' +
             //     '</div>'
             // );
-            $('#output').innerText = json.out;
+            $('#output').val(json.out);
+            btns.removeChild(spinner);
+            btns.disabled = false;
+            setBtnActive();
+            document.getElementById("id_btns").disabled = true;
+            // $('#output').innerText = "// $('#output').prepend('<div class='col-md-6'>" +
+            //     "//     '<div class=/row no-gutters border rounded overflow-hidden flex-md-row /mb-4 shadow-sm h-md-250 position-relative/>' +" +
+            //     "//     '<div class='col p-4 d-flex flex-column position-static'>' +" +
+            //     "//     '<p class='mb-auto'>' + json.out + '<//p>' +" +
+            //     "//     '</div>' +" +
+            //     "//     '</div>' +" +
+            //     "//     '</div>'+" +
+            //     "// )";
             console.log(json.out);
         },
         error: function (xhr, errmsg, err) {

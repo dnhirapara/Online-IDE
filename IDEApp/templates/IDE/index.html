@@ -30,27 +30,34 @@
             <textarea name="code" id="id_code" cols="100" rows="20" hidden></textarea>
         </div>
         <div class="card-footer">
-            <div class="form-check custom-control float-left my-auto pl-0" style="background-color:aqua ;">
-                <label class="form-check-label align-middle" style="background-color: cadetblue;">
+            <div class="form-check custom-control float-left my-auto pl-0">
+                <label class="form-check-label align-middle">
                     <div class="d-inline my-auto py-auto">Custom Input</div>
-                    <input class="form-check-input ml-1 align-middle" style="background-color: cadetblue;"
-                        type="checkbox" value="1" onchange="display()">
-                    <div id="input " class="input " style="display: none; ">
-                        <p>input :</p> <textarea name="input " id="id_input " cols="40 " rows="5 "></textarea>
+                    <input class="form-check-input ml-1 my-2 align-middle" type="checkbox" value="1" id="chk_input"
+                        onchange="display()">
+                    <div id="input" class="card input" style="display: none; ">
+                        <p class="card-header bg-dark text-info">input :</p>
+                        <div class="card-body p-0">
+                            <textarea name="input" id="id_input" cols="40 " rows="5 "></textarea>
+                        </div>
                     </div>
                 </label>
             </div>
-            <button type="submit" class="btn btn-success float-right p-2 ml-2 mr-2rounded-right" value="submit">
-                Submit
-            </button>
-            <button class="btn btn-info float-right p-2 ml-2 mr-2 rounded-right" value="run">Run</button>
+            <div class="footer-btns" id="id_btns" aria-disabled="false">
+                <button type="submit" class="btn btn-success float-right p-2 ml-2 mr-2rounded-right" value="submit"
+                    onclick="setSubmit('submit')">
+                    Submit
+                </button>
+                <button class="btn btn-info float-right p-2 ml-2 mr-2 rounded-right" value="run"
+                    onclick="setSubmit('run')">Run</button>
+            </div>
         </div>
     </div>
 </form>
 <div class="card my-3" style="margin: 0;padding: 0;">
     <div class="card-header">Output</div>
     <div class="card-body">
-        <textarea id="output" readonly>  </textarea>
+        <textarea id="output" readonly style="height: auto;">  </textarea>
     </div>
 </div>
 <script src="{% static 'JS/index.js' %} " type="text/javascript " charset="utf-8 "></script>
